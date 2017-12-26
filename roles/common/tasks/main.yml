@@ -7,7 +7,7 @@
 
 - name: add docker repository
   apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu stretch stable
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
     state: present
 
 - name: update and upgrade system packages
@@ -19,12 +19,12 @@
   apt:
     name: "{{ item }}"
     state: latest
-    with_items: 
-      - software-properties-common 
-      - curl
-      - apt-transport-https 
-      - ca-certificates 
-      - docker-ce
+  with_items: 
+    - software-properties-common 
+    - curl
+    - apt-transport-https 
+    - ca-certificates 
+    - docker-ce
 
 - name: download and install docker-compose
   get_url: 
