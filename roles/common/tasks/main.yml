@@ -1,0 +1,35 @@
+---
+- name: add docker repo key
+  apt_key: 
+    url: https://download.docker.com/linux/ubuntu/gpg
+    id: 0EBFCD88
+    state: present
+
+- name: add docker repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu stretch stable
+    state: present
+
+- name: update and upgrade system packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: install required software
+  apt:
+    name: "{{ item }}"
+    state: latest
+    with_items: 
+      - software-properties-common 
+      - curl
+      - apt-transport-https 
+      - ca-certificates 
+      - docker-ce
+
+- name: download and install docker-compose
+  get_url: 
+        url: https://github.com/docker/compose/releases/download/1.16.1/docker-compose-linux-x86_64 
+        dest: /usr/local/bin/docker-compose
+        mode: u+x
+
+

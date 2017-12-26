@@ -1,0 +1,13 @@
+35.187.22.23 ansible_user=joaopereira.19 ansible_become=true 
+
+[loadbalancers]
+35.187.22.23
+	
+[webservers]
+35.187.22.23 ansible_become=true ansible_user=joaopereira.19
+
+[dbservers]
+35.187.22.23
+
+[storageservers]
+35.187.22.23
