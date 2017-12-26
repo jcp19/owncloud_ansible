@@ -4,7 +4,7 @@
 PUBLIC_KEY = File.read(File.expand_path('~/.ssh/id_rsa.pub')).strip
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/xenial64"
-  config.vm.network "public_network"
+  config.vm.network "public_network", :bridge => "wlp3s0"
 
   # WebApps
   numberOfApps = 3
@@ -19,6 +19,7 @@ Vagrant.configure("2") do |config|
 	    vb.cpus = 1
 	    vb.name = "webApp#{i}"
 	  end
+          webApp.vm.network "private_network", ip: "10.0.0.10#{i}"
       end
   end
 #  config.vm.define "maquina2" do |maq2|
