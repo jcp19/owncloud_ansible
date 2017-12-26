@@ -35,19 +35,9 @@ Vagrant.configure("2") do |config|
 #          maq2.vm.network "private_network", ip: "10.0.0.102"
 #  end
 #
-#  config.vm.provision "shell", inline: <<-SHELL
-#    apt-get -y update
-#    apt-get -y upgrade
-#    apt-get -y autoremove
-#    apt-get install -y vim
-#    echo "#{PUBLIC_KEY}" >> /home/ubuntu/.ssh/authorized_keys
-#    sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-#    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-#    sudo apt-key fingerprint 0EBFCD88
-#    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-#    sudo apt-get -y update
-#    sudo apt-get -y install docker-ce
-#    sudo curl -L https://github.com/docker/compose/releases/download/1.16.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
-#    sudo chmod +x /usr/local/bin/docker-compose
-#  SHELL
+  config.vm.provision "shell", inline: <<-SHELL
+    echo "#{PUBLIC_KEY}" >> /home/ubuntu/.ssh/authorized_keys
+    apt-get update -y
+    apt-get install -y python 
+  SHELL
 end
