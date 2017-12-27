@@ -1,4 +1,9 @@
-- hosts: webservers
+- hosts: all
   become: yes
   roles:
      - common
+
+- hosts: webservers
+  become: yes
+  roles:
+     - webapp

@@ -1,0 +1,13 @@
+---
+- name: copy Dockerfile 
+  copy:
+          src: Dockerfile
+          dest: /tmp/Dockerfile
+
+- name: build Docker image
+  command: docker build -t g3/owncloud /tmp  
+
+- name: run docker container in port 80
+  shell: docker run -p 80:80 g3/owncloud 
+  async: 3
+  poll: 0
