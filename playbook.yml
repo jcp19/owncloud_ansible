@@ -4,6 +4,15 @@
      - common
 
 - hosts: webservers
+  vars:
+          master_db: "{{ groups['master_db_server'][0] }}"
   become: yes
   roles:
      - webapp
+
+- hosts: dbservers
+  become: yes
+  roles:
+     - database 
+ 
+
