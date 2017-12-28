@@ -1,8 +1,23 @@
 ---
-- name: copy Dockerfile 
-  copy:
-          src: Dockerfile
+#- name: copy Dockerfile 
+#  copy:
+#          src: Dockerfile
+#          dest: /tmp/Dockerfile
+#
+
+- name: create Dockerfile
+  template:
+          src: Dockerfile.j2
           dest: /tmp/Dockerfile
+          owner: www-data
+          group: www-data
+
+#- name: create configuration file
+#  template:
+#          src: config.j2
+#          dest: /tmp/config.php
+#          owner: www-data
+#          group: www-data
 
 - name: build Docker image
   command: docker build -t g3/owncloud /tmp  
@@ -11,3 +26,4 @@
   shell: docker run -p 80:80 g3/owncloud 
   async: 3
   poll: 0
+

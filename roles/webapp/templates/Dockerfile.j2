@@ -36,19 +36,34 @@ RUN  apt-get install -y \
     mysql-client \
     postgresql-client \
     sqlite \
+    nano \
+    sudo \
     gettext-base && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /etc/apache2/sites-available/default-ssl.conf && \
   a2enmod rewrite headers env dir mime ssl expires 
 #  mkdir -p /var/www/owncloud /mnt/data/files /mnt/data/config /mnt/data/certs /mnt/data/sessions && \
-#  chown -R www-data:www-data /var/www/owncloud /mnt/data && \
+
 #  chsh -s /bin/bash www-data
 #  #curl https://download.owncloud.org/download/repositories/10.0/Ubuntu_17.04/Release.key |  apt-key add - && \
 #  #sh -c "echo 'deb https://download.owncloud.org/download/repositories/10.0/Ubuntu_17.04/ /' > /etc/apt/sources.list.d/owncloud.list" && \
 #  #apt-get update 
 #
 #COPY rootfs /
-WORKDIR /var/www/html
+WORKDIR /var/www
 RUN wget https://download.owncloud.org/community/owncloud-10.0.4.zip
 RUN unzip owncloud-10.0.4.zip
+RUN rm -rf html && mv owncloud html && mkdir data
+#RUN chown -R www-data:www-data /var/www/owncloud /mnt/data 
+RUN chown -R www-data:www-data /var/www/html /var/www/data
+WORKDIR /var/www/html
+RUN sudo -u www-data php occ maintenance:install \
+   --database "mysql" \
+   --database-host "{{ master_db }}" --database-name "owncloud" \
+   --database-user "owncloud" --database-pass "12345" \
+   --admin-user "admin" --admin-pass "admin" \
+   --data-dir "/var/www/data"
+
+RUN sudo -u www-data php occ config:system:set trusted_domains 1 --value="{{ inventory_hostname }}"
+
 CMD service apache2 start && tail -f /dev/null
