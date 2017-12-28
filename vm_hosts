@@ -6,12 +6,17 @@
 10.0.0.101 ansible_user=ubuntu ansible_become=true
 	
 [webservers]
-10.0.0.101 ansible_user=ubuntu ansible_become=true 
-10.0.0.102 ansible_user=ubuntu ansible_become=true 
-10.0.0.103 ansible_user=ubuntu ansible_become=true 
+10.0.0.102 
+
+[webservers:vars]
+ansible_user=ubuntu 
+ansible_become=true 
+
+[master_db_server]
+10.0.0.103 
 
 [dbservers]
-10.0.0.101 ansible_user=ubuntu ansible_become=true
+10.0.0.103 ansible_user=ubuntu ansible_become=true
 
 [storageservers]
 10.0.0.101 ansible_user=ubuntu ansible_become=true
