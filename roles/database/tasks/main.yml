@@ -1,0 +1,55 @@
+---
+- name: Instalacao mySQL
+  apt:
+          name: "{{ item }}"
+          state: latest
+  with_items:
+          - python-mysqldb
+          - mysql-server
+          
+- name: Iniciar o mysql
+  service:
+          name: mysql 
+          state: started
+          enabled: true
+
+- name: update mysql root password
+  sudo: yes
+  mysql_user: 
+      name: root
+      host: localhost 
+      password: "{{ lookup('file', 'root_passwd') }}"
+      login_user: root
+      login_password: "{{ lookup('file', 'root_passwd') }}"
+
+- name: Create a new database with name 'owncloud'
+  mysql_db:
+          name: owncloud
+          state: present
+          login_user: root
+          login_password: "{{ lookup('file', 'root_passwd') }}"
+
+- name: create owncloud user
+  sudo: yes
+  mysql_user: 
+      name: owncloud
+      host: "%" 
+      password: "{{ lookup('file', 'passwd') }}"
+      priv: "owncloud.*:ALL"
+      login_user: root
+      login_password: "{{ lookup('file', 'root_passwd') }}"
+
+- name: replace IP binding
+  replace:
+          regexp: "bind-address[^\n]*"
+          path: "/etc/mysql/mysql.conf.d/mysqld.cnf"
+          replace: "bind-address        = {{ inventory_hostname }}"
+
+- name: restart mysql
+  service: name=mysql state=restarted
+
+#- name: copy .my.cnf file with root password credentials
+#        template: src=templates/root/.my.cnf dest=/root/.my.cnf owner=root mode=0600
+#        
+#- name: remove the test database
+#mysql_db: name=test state=absent
