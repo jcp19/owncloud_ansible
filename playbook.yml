@@ -3,16 +3,22 @@
   roles:
      - common
 
-- hosts: webservers
-  vars:
-          master_db: "{{ groups['master_db_server'][0] }}"
+- hosts: storage_servers
   become: yes
   roles:
-     - webapp
+     - storage
 
-- hosts: dbservers
+- hosts: db_servers
   become: yes
   roles:
      - database 
  
+- hosts: web_servers
+  vars:
+          master_db: "{{ groups['db_servers'][0] }}"
+          storage_location: "{{ groups['storage_servers'][0] }}:/var/owncloud_data"
+  become: yes
+  roles:
+     - webapp
+
 

@@ -1,0 +1,42 @@
+---
+- name: install nfs dependencies
+  apt: 
+    name: "nfs-kernel-server"
+    state: latest
+    update_cache: yes
+
+- name: check if directory was already created (for idempotence)
+  stat: 
+    path: "/var/owncloud_data"
+  register: data_folder
+
+- name: setup directory for owncloud data
+  file: 
+    path: "/var/owncloud_data"
+    state: directory
+    owner: www-data
+    group: www-data
+  when: not (data_folder.stat.isdir is defined and data_folder.stat.isdir)
+
+
+#- name: setup directory for owncloud config
+#  file: 
+#    path: "/var/owncloud_cfg"
+#    state: directory
+#    owner: www-data
+#    group: www-data
+#
+    #- name: set accepted machines
+
+- name: add /var/data to export
+  lineinfile:
+      path: /etc/exports
+      line: "/var/owncloud_data  *(rw,sync)"
+      insertafter: EOF
+  notify:
+      restart nfs
+  when: not (data_folder.stat.isdir is defined and data_folder.stat.isdir)
+
+  #add hook to restart nfs-kerbnel
+
+# add rule in case there is a firewall?

@@ -5,10 +5,15 @@
 #          dest: /tmp/Dockerfile
 #
 
+- name: create build env for Docker
+  file:
+          path: /tmp/webapp_owncloud
+          state: directory
+
 - name: create Dockerfile
   template:
           src: Dockerfile.j2
-          dest: /tmp/Dockerfile
+          dest: /tmp/webapp_owncloud/Dockerfile
           owner: www-data
           group: www-data
 
@@ -19,11 +24,22 @@
 #          owner: www-data
 #          group: www-data
 
+
+- name: create mount point 
+  file:
+    path: /var/owncloud_data
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: mount storage
+  command: "mount {{ storage_location }} /var/owncloud_data"
+
 - name: build Docker image
-  command: docker build -t g3/owncloud /tmp  
+  command: docker build -t g3/owncloud /tmp/webapp_owncloud
 
 - name: run docker container in port 80
-  shell: docker run -p 80:80 g3/owncloud 
+  shell: docker run -v /var/owncloud_data:/var/www/data -p 80:80 g3/owncloud 
   async: 3
   poll: 0
 
