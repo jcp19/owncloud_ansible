@@ -13,7 +13,7 @@
 - name: update and upgrade system packages
   apt:
     update_cache: yes
-    upgrade: dist
+    #upgrade: dist
 
 - name: install required software
   apt:
@@ -25,6 +25,7 @@
     - apt-transport-https 
     - ca-certificates 
     - docker-ce
+    - nfs-common
 
 - name: download and install docker-compose
   get_url: 

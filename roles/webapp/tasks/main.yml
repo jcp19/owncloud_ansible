@@ -48,11 +48,20 @@
             - 80:80
           image: g3/owncloud 
           detach: false
+  async: 3
+  poll: 0
 
 - name: Check if the configuration files exist
   stat:
      path: /var/owncloud_config/config.php
   register: stat_result
+
+- name: Check if configuration file is valid
+  become_user: www-data
+  shell: grep "'installed' => true," /var/owncloud_config/config.php
+  register: test_grep
+  when: stat_result.stat.exists == True 
+  ignore_errors: yes
 
 - name: Configures owncloud if not initialized
   shell: docker exec owncloud_webapp sudo -u www-data php occ maintenance:install \
@@ -62,7 +71,7 @@
         --admin-user "admin" --admin-pass "admin" \
         --data-dir "/var/www/data"
   run_once: true
-  when: stat_result.stat.exists == False 
+  when: stat_result.stat.exists == False or test_grep.stdout == ""
 
 - name: add server location to trusted domains
   shell: docker exec owncloud_webapp \

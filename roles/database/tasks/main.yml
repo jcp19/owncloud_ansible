@@ -43,7 +43,8 @@
   replace:
           regexp: "bind-address[^\n]*"
           path: "/etc/mysql/mysql.conf.d/mysqld.cnf"
-          replace: "bind-address        = {{ inventory_hostname }}"
+          #replace: "bind-address        = {{ inventory_hostname }}"
+          replace: "bind-address        = {{ db_internal_addr }}"
 
 - name: restart mysql
   service: name=mysql state=restarted

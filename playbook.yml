@@ -10,14 +10,16 @@
 
 - hosts: db_servers
   become: yes
+  vars: 
+          db_internal_addr: "{{ groups['db_servers_internal'][0] }}"  
   roles:
      - database 
  
 - hosts: web_servers
   vars:
-          master_db: "{{ groups['db_servers'][0] }}"
-          storage_location: "{{ groups['storage_servers'][0] }}:/var/owncloud_data"
-          config_location: "{{ groups['storage_servers'][0] }}:/var/owncloud_config"
+          master_db: "{{ groups['db_servers_internal'][0] }}"
+          storage_location: "{{ groups['storage_servers_internal'][0] }}:/var/owncloud_data"
+          config_location: "{{ groups['storage_servers_internal'][0] }}:/var/owncloud_config"
   become: yes
   roles:
      - webapp
