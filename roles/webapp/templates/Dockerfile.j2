@@ -59,14 +59,14 @@ RUN rm -rf html && mv owncloud html && mkdir data
 RUN chown -R www-data:www-data /var/www/html /var/www/data
 #RUN service statd start
 WORKDIR /var/www/html
-RUN sudo -u www-data php occ maintenance:install \
-   --database "mysql" \
-   --database-host "{{ master_db }}" --database-name "owncloud" \
-   --database-user "owncloud" --database-pass "12345" \
-   --admin-user "admin" --admin-pass "admin" \
-   --data-dir "/var/www/data"
-
-RUN sudo -u www-data php occ config:system:set trusted_domains 1 --value="{{ inventory_hostname }}"
+#RUN sudo -u www-data php occ maintenance:install \
+#   --database "mysql" \
+#   --database-host "{{ master_db }}" --database-name "owncloud" \
+#   --database-user "owncloud" --database-pass "12345" \
+#   --admin-user "admin" --admin-pass "admin" \
+#   --data-dir "/var/www/data"
+#
+#RUN sudo -u www-data php occ config:system:set trusted_domains 1 --value="{{ inventory_hostname }}"
 
 #CMD mount -o nolock {{ storage_location }} /var/www/data
 #CMD service nfs-common start

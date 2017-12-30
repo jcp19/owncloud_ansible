@@ -1,10 +1,4 @@
 ---
-#- name: copy Dockerfile 
-#  copy:
-#          src: Dockerfile
-#          dest: /tmp/Dockerfile
-#
-
 - name: create build env for Docker
   file:
           path: /tmp/webapp_owncloud
@@ -17,29 +11,45 @@
           owner: www-data
           group: www-data
 
-#- name: create configuration file
-#  template:
-#          src: config.j2
-#          dest: /tmp/config.php
-#          owner: www-data
-#          group: www-data
-
-
-- name: create mount point 
-  file:
+- name: mount data storage
+  mount:
     path: /var/owncloud_data
-    state: directory
-    owner: www-data
-    group: www-data
+    src: "{{ storage_location }}"
+    state: mounted
+    fstype: nfs
 
-- name: mount storage
-  command: "mount {{ storage_location }} /var/owncloud_data"
+- name: mount configuration storage
+  mount:
+    path: /var/owncloud_config
+    src: "{{ config_location }}"
+    state: mounted
+    fstype: nfs
 
 - name: build Docker image
   command: docker build -t g3/owncloud /tmp/webapp_owncloud
 
+#- name: remove old container for idempotence ### necessario ver se existe antes! pode valer a pena usar
+#  #plugins ansible
+#  shell: docker container rm owncloud_webapp
+#
+  # delete container before ###check if container is runing: idempotence?
 - name: run docker container in port 80
-  shell: docker run -v /var/owncloud_data:/var/www/data -p 80:80 g3/owncloud 
+  shell: docker run --name="owncloud_webapp" -v /var/owncloud_data:/var/www/data -v /var/owncloud_config:/var/www/html/config -p 80:80 g3/owncloud 
   async: 3
   poll: 0
 
+  # verificar se tem o ficheiro initialized (ou o ficheiro config), se tiver, nao replicar
+
+- name: execute initialization do
+  shell: docker exec owncloud_webapp sudo -u www-data php occ maintenance:install \
+        --database "mysql" \
+        --database-host "{{ master_db }}" --database-name "owncloud" \
+        --database-user "owncloud" --database-pass "12345" \
+        --admin-user "admin" --admin-pass "admin" \
+        --data-dir "/var/www/data"
+  run_once: true
+
+- name: add server location to trusted domains
+  shell: docker exec owncloud_webapp \
+         sudo -u www-data php occ config:system:set \
+         trusted_domains {{ inventory_hostname }} --value={{ inventory_hostname }}

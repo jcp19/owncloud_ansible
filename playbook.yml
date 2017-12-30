@@ -17,6 +17,7 @@
   vars:
           master_db: "{{ groups['db_servers'][0] }}"
           storage_location: "{{ groups['storage_servers'][0] }}:/var/owncloud_data"
+          config_location: "{{ groups['storage_servers'][0] }}:/var/owncloud_config"
   become: yes
   roles:
      - webapp

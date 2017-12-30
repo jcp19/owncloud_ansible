@@ -5,7 +5,7 @@
     state: latest
     update_cache: yes
 
-- name: check if directory was already created (for idempotence)
+- name: check if data directory was already created (for idempotence)
   stat: 
     path: "/var/owncloud_data"
   register: data_folder
@@ -37,6 +37,36 @@
       restart nfs
   when: not (data_folder.stat.isdir is defined and data_folder.stat.isdir)
 
-  #add hook to restart nfs-kerbnel
+- name: check if config directory was already created (for idempotence)
+  stat: 
+    path: "/var/owncloud_config"
+  register: config_folder
+
+- name: setup directory for owncloud configuration
+  file: 
+    path: "/var/owncloud_config"
+    state: directory
+    owner: www-data
+    group: www-data
+  when: not (config_folder.stat.isdir is defined and config_folder.stat.isdir)
+
+
+#- name: setup directory for owncloud config
+#  file: 
+#    path: "/var/owncloud_cfg"
+#    state: directory
+#    owner: www-data
+#    group: www-data
+#
+    #- name: set accepted machines
+
+- name: add /var/config to export
+  lineinfile:
+      path: /etc/exports
+      line: "/var/owncloud_config  *(rw,sync)"
+      insertafter: EOF
+  notify:
+      restart nfs
+  when: not (config_folder.stat.isdir is defined and config_folder.stat.isdir)
 
 # add rule in case there is a firewall?
