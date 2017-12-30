@@ -14,7 +14,7 @@
           enabled: true
 
 - name: update mysql root password
-  sudo: yes
+  #sudo: yes
   mysql_user: 
       name: root
       host: localhost 
@@ -30,7 +30,7 @@
           login_password: "{{ lookup('file', 'root_passwd') }}"
 
 - name: create owncloud user
-  sudo: yes
+  #sudo: yes
   mysql_user: 
       name: owncloud
       host: "%" 
