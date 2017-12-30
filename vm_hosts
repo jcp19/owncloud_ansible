@@ -5,18 +5,29 @@
 [loadbalancers]
 10.0.0.101 ansible_user=ubuntu ansible_become=true
 	
-[webservers]
+[web_servers]
 10.0.0.102 
 
-[webservers:vars]
+[web_servers:vars]
 ansible_user=ubuntu 
 ansible_become=true 
 
-[master_db_server]
-10.0.0.103 
-
-[dbservers]
+[db_servers]
 10.0.0.103 ansible_user=ubuntu ansible_become=true
 
-[storageservers]
+[storage_servers]
 10.0.0.101 ansible_user=ubuntu ansible_become=true
+
+[web_servers_internal]
+10.0.0.102 
+
+[web_servers_internal:vars]
+ansible_user=ubuntu 
+ansible_become=true 
+
+[db_servers_internal]
+10.0.0.103 ansible_user=ubuntu ansible_become=true
+
+[storage_servers_internal]
+10.0.0.101 ansible_user=ubuntu ansible_become=true
+
