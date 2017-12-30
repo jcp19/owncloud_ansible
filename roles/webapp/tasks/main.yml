@@ -1,4 +1,12 @@
 ---
+- name: install pip
+  apt:
+          name: python-pip
+          state: latest
+
+- name: install docker-py for ansible docker modules
+  command: pip install docker-py
+
 - name: create build env for Docker
   file:
           path: /tmp/webapp_owncloud
@@ -26,19 +34,45 @@
     fstype: nfs
 
 - name: build Docker image
-  command: docker build -t g3/owncloud /tmp/webapp_owncloud
+  docker_image:
+    path: /tmp/webapp_owncloud
+    name: g3/owncloud
+
+    #- name: build Docker image
+    #command: docker build -t g3/owncloud /tmp/webapp_owncloud
 
 #- name: remove old container for idempotence ### necessario ver se existe antes! pode valer a pena usar
 #  #plugins ansible
 #  shell: docker container rm owncloud_webapp
 #
   # delete container before ###check if container is runing: idempotence?
+  # we chose not to use an ansible plugin because it could run: it complained
+  # about docker-py not being installed, even though it is
+
 - name: run docker container in port 80
-  shell: docker run --name="owncloud_webapp" -v /var/owncloud_data:/var/www/data -v /var/owncloud_config:/var/www/html/config -p 80:80 g3/owncloud 
+  docker_container:
+          name: owncloud_webapp
+          volumes: 
+            - /var/owncloud_data:/var/www/data
+            - /var/owncloud_config:/var/www/html/config
+          published_ports:
+            - 80:80
+          image: g3/owncloud 
+          detach: false
   async: 3
   poll: 0
 
+#- name: run docker container in port 80
+#  shell: docker run --name="owncloud_webapp" -v /var/owncloud_data:/var/www/data -v /var/owncloud_config:/var/www/html/config -p 80:80 g3/owncloud 
+#  async: 3
+#  poll: 0
+#
   # verificar se tem o ficheiro initialized (ou o ficheiro config), se tiver, nao replicar
+
+- name: Check if the configuration files exist
+  stat:
+     path: /var/owncloud_config/config.php
+  register: stat_result
 
 - name: execute initialization do
   shell: docker exec owncloud_webapp sudo -u www-data php occ maintenance:install \
@@ -48,6 +82,7 @@
         --admin-user "admin" --admin-pass "admin" \
         --data-dir "/var/www/data"
   run_once: true
+  when: stat_result.stat.exists == False 
 
 - name: add server location to trusted domains
   shell: docker exec owncloud_webapp \
