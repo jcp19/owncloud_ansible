@@ -16,17 +16,6 @@
     state: directory
     owner: www-data
     group: www-data
-  when: not (data_folder.stat.isdir is defined and data_folder.stat.isdir)
-
-
-#- name: setup directory for owncloud config
-#  file: 
-#    path: "/var/owncloud_cfg"
-#    state: directory
-#    owner: www-data
-#    group: www-data
-#
-    #- name: set accepted machines
 
 - name: add /var/data to export
   lineinfile:
@@ -48,17 +37,6 @@
     state: directory
     owner: www-data
     group: www-data
-  when: not (config_folder.stat.isdir is defined and config_folder.stat.isdir)
-
-
-#- name: setup directory for owncloud config
-#  file: 
-#    path: "/var/owncloud_cfg"
-#    state: directory
-#    owner: www-data
-#    group: www-data
-#
-    #- name: set accepted machines
 
 - name: add /var/config to export
   lineinfile:
