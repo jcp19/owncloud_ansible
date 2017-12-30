@@ -1,0 +1,17 @@
+[web_servers]
+35.195.220.2 ansible_become=true ansible_user=joaopereira.19  
+
+[web_servers_internal]
+10.132.0.2 ansible_become=true ansible_user=joaopereira.19 ansible_ssh_extra_args="-o StrictHostKeyChecking=no"
+
+[db_servers]
+35.205.253.121 ansible_become=true ansible_user=joaopereira.19
+
+[db_servers_internal]
+10.132.0.4 ansible_become=true ansible_user=joaopereira.19 ansible_ssh_extra_args="-o StrictHostKeyChecking=no"
+
+[storage_servers]
+35.195.44.123 ansible_become=true ansible_user=joaopereira.19
+
+[storage_servers_internal]
+10.132.0.3 ansible_become=true ansible_user=joaopereira.19 ansible_ssh_extra_args="-o StrictHostKeyChecking=no"
