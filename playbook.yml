@@ -22,6 +22,7 @@
           config_location: "{{ groups['storage_servers_internal'][0] }}:/var/owncloud_config"
   become: yes
   roles:
+     - docker
      - webapp
 
 
