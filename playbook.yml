@@ -20,7 +20,7 @@
           master_db: "{{ hostvars[groups['db_servers'][0]].private_addr }}"
           storage_location: "{{ hostvars[groups['storage_servers'][0]].private_addr }}:/var/owncloud_data"
           config_location: "{{ hostvars[groups['storage_servers'][0]].private_addr }}:/var/owncloud_config"
-          trusted_domains: "{{ groups['web_servers']|map('extract', hostvars, 'private_addr')|list }} + {{ groups['load_balancer']|map('extract', hostvars, 'private_addr')|list }}" 
+          trusted_domains: "{{ groups['web_servers']|map('extract', hostvars, 'private_addr')|list }} + {{ groups['load_balancer'] }}" 
   become: yes
   roles:
      - docker
