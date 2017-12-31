@@ -11,18 +11,24 @@
 - hosts: db_servers
   become: yes
   vars: 
-          db_internal_addr: "{{ groups['db_servers_internal'][0] }}"  
+          db_internal_addr: "{{ hostvars[groups['db_servers'][0]].private_addr }}"  
   roles:
      - database 
  
 - hosts: web_servers
   vars:
-          master_db: "{{ groups['db_servers_internal'][0] }}"
-          storage_location: "{{ groups['storage_servers_internal'][0] }}:/var/owncloud_data"
-          config_location: "{{ groups['storage_servers_internal'][0] }}:/var/owncloud_config"
+          master_db: "{{ hostvars[groups['db_servers'][0]].private_addr }}"
+          storage_location: "{{ hostvars[groups['storage_servers'][0]].private_addr }}:/var/owncloud_data"
+          config_location: "{{ hostvars[groups['storage_servers'][0]].private_addr }}:/var/owncloud_config"
+          trusted_domains: "{{ groups['web_servers']|map('extract', hostvars, 'private_addr')|list }} + {{ groups['load_balancer']|map('extract', hostvars, 'private_addr')|list }}" 
   become: yes
   roles:
      - docker
      - webapp
 
-
+- hosts: load_balancer
+  become: yes
+  vars:
+          servers: "{{ groups['web_servers']|map('extract', hostvars, 'private_addr')|list }}"
+  roles:
+     - web_load_balancer

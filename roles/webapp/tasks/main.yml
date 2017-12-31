@@ -45,7 +45,7 @@
             - /var/owncloud_data:/var/www/data
             - /var/owncloud_config:/var/www/html/config
           published_ports:
-            - 80:80
+            - 8080:80
           image: g3/owncloud 
           detach: false
   async: 3
@@ -74,6 +74,9 @@
   when: stat_result.stat.exists == False or test_grep.stdout == ""
 
 - name: add server location to trusted domains
-  shell: docker exec owncloud_webapp \
+  command: docker exec -t owncloud_webapp \
          sudo -u www-data php occ config:system:set \
-         trusted_domains {{ inventory_hostname }} --value={{ inventory_hostname }}
+         trusted_domains {{ item }} --value={{ item }}
+  with_items:
+      - "{{ trusted_domains }}"
+  run_once: true

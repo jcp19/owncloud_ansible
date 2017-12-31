@@ -7,7 +7,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "public_network", :bridge => "wlp3s0"
 
   # WebApps
-  numberOfApps = 3
+  numberOfApps = 4
   (1..numberOfApps).each do |i|
       config.vm.define "webApp#{i}" do |webApp|
 	  config.vm.provider "virtualbox" do |vb|
