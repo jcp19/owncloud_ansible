@@ -3,17 +3,28 @@
   roles:
      - common
 
-- hosts: storage_servers
+- hosts: elasticsearch
   become: yes
   roles:
+     - docker
+     - elasticsearch
+
+- hosts: storage_servers
+  become: yes
+  vars:
+          elastic_host: "{{hostvars[groups['elasticsearch'][0]].private_addr}}"
+  roles:
      - storage
+     - beats
 
 - hosts: db_servers
   become: yes
   vars: 
           db_internal_addr: "{{ hostvars[groups['db_servers'][0]].private_addr }}"  
+          elastic_host: "{{hostvars[groups['elasticsearch'][0]].private_addr}}"
   roles:
      - database 
+     - beats
  
 - hosts: web_servers
   vars:
@@ -21,14 +32,19 @@
           storage_location: "{{ hostvars[groups['storage_servers'][0]].private_addr }}:/var/owncloud_data"
           config_location: "{{ hostvars[groups['storage_servers'][0]].private_addr }}:/var/owncloud_config"
           trusted_domains: "{{ groups['web_servers']|map('extract', hostvars, 'private_addr')|list }} + {{ groups['load_balancer'] }}" 
+          elastic_host: "{{hostvars[groups['elasticsearch'][0]].private_addr}}"
   become: yes
   roles:
      - docker
      - webapp
+     - beats
 
 - hosts: load_balancer
   become: yes
   vars:
           servers: "{{ groups['web_servers']|map('extract', hostvars, 'private_addr')|list }}"
+          elastic_host: "{{hostvars[groups['elasticsearch'][0]].private_addr}}"
   roles:
      - web_load_balancer
+     - beats
+

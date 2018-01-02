@@ -15,3 +15,6 @@ ansible_user=joaopereira.19
 
 [load_balancer]
 35.185.2.226 private_addr=10.142.0.6 
+
+[elasticsearch]
+35.197.217.40 private_addr=10.154.0.2
