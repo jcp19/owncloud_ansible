@@ -1,12 +1,4 @@
 ---
-- name: install pip
-  apt:
-          name: python-pip
-          state: latest
-
-- name: install docker-py for ansible docker modules
-  command: pip install docker-py
-
 - name: create build env for Docker
   file:
           path: /tmp/webapp_owncloud

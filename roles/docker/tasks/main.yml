@@ -28,4 +28,12 @@
 #        dest: /usr/local/bin/docker-compose
 #        mode: u+x
 #
+- name: install pip
+  apt:
+          name: python-pip
+          state: latest
+
+- name: install docker-py for ansible docker modules
+  command: pip install docker-py
+
 
