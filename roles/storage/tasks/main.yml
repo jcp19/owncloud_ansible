@@ -47,4 +47,6 @@
       restart nfs
   when: not (config_folder.stat.isdir is defined and config_folder.stat.isdir)
 
+- name: 
+  shell: exportfs -a
 # add rule in case there is a firewall?
