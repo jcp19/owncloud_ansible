@@ -1,20 +1,18 @@
 [all:vars]
 ansible_become=true 
-ansible_user=joaopereira.19  
+ansible_user=lucianosilva  
 
 [web_servers]
-35.185.127.2 private_addr=10.142.0.2
-35.190.171.32 private_addr=10.142.0.3
-35.185.2.226 private_addr=10.142.0.6 
+35.197.204.80 private_addr=10.154.0.4
 
 [db_servers]
-104.196.28.133 private_addr=10.142.0.4 
+35.197.204.80 private_addr=10.154.0.4 
 
 [storage_servers]
-104.196.181.160 private_addr=10.142.0.5 
+35.197.204.80 private_addr=10.154.0.4
 
 [load_balancer]
-35.185.2.226 private_addr=10.142.0.6 
+35.197.204.80 private_addr=10.154.0.4
 
 [elasticsearch]
-35.197.217.40 private_addr=10.154.0.2
+35.197.240.129 private_addr=10.154.0.2
