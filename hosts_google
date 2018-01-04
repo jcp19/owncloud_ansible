@@ -3,16 +3,16 @@ ansible_become=true
 ansible_user=lucianosilva  
 
 [web_servers]
-35.197.204.80 private_addr=10.154.0.4
+35.197.196.200 private_addr=10.154.0.4
 
 [db_servers]
-35.197.204.80 private_addr=10.154.0.4 
+35.197.196.200 private_addr=10.154.0.4 
 
 [storage_servers]
-35.197.204.80 private_addr=10.154.0.4
+35.189.76.141 private_addr=10.154.0.5
 
 [load_balancer]
-35.197.204.80 private_addr=10.154.0.4
+35.197.196.200 private_addr=10.154.0.4
 
 [elasticsearch]
-35.197.240.129 private_addr=10.154.0.2
+35.197.240.174 private_addr=10.154.0.2
