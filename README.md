@@ -14,4 +14,4 @@ Ansible scripts for deploying _ownCloud_ in a network. The _webapps_ are replica
  - Translate some stuff in portuguese 
 
 ## Credits:
-This was originally made for a Systems Deployment and Benchmarking class with the help of Luciano Silva and Lisandra Silva.
+This was originally made for a Systems Deployment and Benchmarking class with the help of [Luciano Silva](https://github.com/luciano96) and [Lisandra Silva](https://github.com/lisandrasilva).
