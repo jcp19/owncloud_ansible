@@ -1,13 +1,18 @@
-35.187.22.23 ansible_user=joaopereira.19 ansible_become=true 
+[all:vars]
+ansible_become=true 
+ansible_user=YOUR_USERNAME
 
-[loadbalancers]
-35.187.22.23
-	
-[webservers]
-35.187.22.23 ansible_become=true ansible_user=joaopereira.19
+[web_servers]
+PUBLIC_IP private_addr=PRIVATE_IP
 
-[dbservers]
-35.187.22.23
+[db_servers]
+PUBLIC_IP private_addr=PRIVATE_IP
 
-[storageservers]
-35.187.22.23
+[storage_servers]
+PUBLIC_IP private_addr=PRIVATE_IP
+
+[load_balancer]
+PUBLIC_IP private_addr=PRIVATE_IP
+
+[elasticsearch]
+PUBLIC_IP private_addr=PRIVATE_IP
